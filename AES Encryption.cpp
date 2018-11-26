@@ -1,5 +1,6 @@
-
-
+/* Written By Akash Atri
+All tables are picked from wikipedia
+*/
 #include "stdafx.h"
 #include<stdint.h>
 #include<iostream>
@@ -188,29 +189,6 @@ unsigned char rcon[256] = {
 };
 
 
-unsigned char gmul(unsigned char text1, unsigned char text2) {
-	unsigned char temp = 0;
-
-	while (text2) {
-		if (text2 & 1) {
-			temp = temp ^ text1;
-		}
-		if (text1 & 0x80) {
-			text1 = (text1 << 1) ^ 0x11b;
-
-		}
-		else {
-			text1 = text1 << 1;
-		}
-		text2 = text2 >> 1;
-	}
-	return temp;
-}
-
-
-
-
-
 void KeyExpansion(unsigned char* input, unsigned char* expandedKeys) {
 
 	for (int i = 0; i < AES_BYTE; i++) {
@@ -280,28 +258,28 @@ void ShiftRows(unsigned char * plain_text) {
 	}
 }
 void MixColumns(unsigned char* state) {
-	// Dot product and byte mod of state
+	
 
 	unsigned char tmp[16];
-	// Column 1 entries
+	
 	tmp[0] = (unsigned char)(mul2[state[0]] ^ mul3[state[1]] ^ state[2] ^ state[3]);
 	tmp[1] = (unsigned char)(state[0] ^ mul2[state[1]] ^ mul3[state[2]] ^ state[3]);
 	tmp[2] = (unsigned char)(state[0] ^ state[1] ^ mul2[state[2]] ^ mul3[state[3]]);
 	tmp[3] = (unsigned char)(mul3[state[0]] ^ state[1] ^ state[2] ^ mul2[state[3]]);
 
-	// Column 2 entries
+	
 	tmp[4] = (unsigned char)(mul2[state[4]] ^ mul3[state[5]] ^ state[6] ^ state[7]);
 	tmp[5] = (unsigned char)(state[4] ^ mul2[state[5]] ^ mul3[state[6]] ^ state[7]);
 	tmp[6] = (unsigned char)(state[4] ^ state[5] ^ mul2[state[6]] ^ mul3[state[7]]);
 	tmp[7] = (unsigned char)(mul3[state[4]] ^ state[5] ^ state[6] ^ mul2[state[7]]);
 
-	// Column 3 entries
+	
 	tmp[8] = (unsigned char)(mul2[state[8]] ^ mul3[state[9]] ^ state[10] ^ state[11]);
 	tmp[9] = (unsigned char)(state[8] ^ mul2[state[9]] ^ mul3[state[10]] ^ state[11]);
 	tmp[10] = (unsigned char)(state[8] ^ state[9] ^ mul2[state[10]] ^ mul3[state[11]]);
 	tmp[11] = (unsigned char)(mul3[state[8]] ^ state[9] ^ state[10] ^ mul2[state[11]]);
 
-	// Column 4 entries
+
 	tmp[12] = (unsigned char)(mul2[state[12]] ^ mul3[state[13]] ^ state[14] ^ state[15]);
 	tmp[13] = (unsigned char)(state[12] ^ mul2[state[13]] ^ mul3[state[14]] ^ state[15]);
 	tmp[14] = (unsigned char)(state[12] ^ state[13] ^ mul2[state[14]] ^ mul3[state[15]]);
@@ -345,7 +323,7 @@ void RevShiftRow(unsigned char * plain_text) {
 	unsigned char temp[AES_BYTE];
 
 	for (int i = 0; i < AES_BYTE; i += 4) {
-		//incrementing by 5 causes the diagonal shift effect
+		
 		temp[i] = plain_text[i];
 		temp[(i + 5) % AES_BYTE] = plain_text[i + 1];
 		temp[(i + 10) % AES_BYTE] = plain_text[i + 2];
@@ -361,25 +339,25 @@ void RevShiftRow(unsigned char * plain_text) {
 void ReverseMixColumns(unsigned char* state) {
 	unsigned char tmp[16];
 
-	// Column 1
+
 	tmp[0] = (unsigned char)(mul14[state[0]] ^ mul11[state[1]] ^ mul13[state[2]] ^ mul9[state[3]]);
 	tmp[1] = (unsigned char)(mul9[state[0]] ^ mul14[state[1]] ^ mul11[state[2]] ^ mul13[state[3]]);
 	tmp[2] = (unsigned char)(mul13[state[0]] ^ mul9[state[1]] ^ mul14[state[2]] ^ mul11[state[3]]);
 	tmp[3] = (unsigned char)(mul11[state[0]] ^ mul13[state[1]] ^ mul9[state[2]] ^ mul14[state[3]]);
 
-	// Column 2
+	
 	tmp[4] = (unsigned char)(mul14[state[4]] ^ mul11[state[5]] ^ mul13[state[6]] ^ mul9[state[7]]);
 	tmp[5] = (unsigned char)(mul9[state[4]] ^ mul14[state[5]] ^ mul11[state[6]] ^ mul13[state[7]]);
 	tmp[6] = (unsigned char)(mul13[state[4]] ^ mul9[state[5]] ^ mul14[state[6]] ^ mul11[state[7]]);
 	tmp[7] = (unsigned char)(mul11[state[4]] ^ mul13[state[5]] ^ mul9[state[6]] ^ mul14[state[7]]);
 
-	// Column 3
+	
 	tmp[8] = (unsigned char)(mul14[state[8]] ^ mul11[state[9]] ^ mul13[state[10]] ^ mul9[state[11]]);
 	tmp[9] = (unsigned char)(mul9[state[8]] ^ mul14[state[9]] ^ mul11[state[10]] ^ mul13[state[11]]);
 	tmp[10] = (unsigned char)(mul13[state[8]] ^ mul9[state[9]] ^ mul14[state[10]] ^ mul11[state[11]]);
 	tmp[11] = (unsigned char)(mul11[state[8]] ^ mul13[state[9]] ^ mul9[state[10]] ^ mul14[state[11]]);
 
-	// Column 4
+	
 	tmp[12] = (unsigned char)(mul14[state[12]] ^ mul11[state[13]] ^ mul13[state[14]] ^ mul9[state[15]]);
 	tmp[13] = (unsigned char)(mul9[state[12]] ^ mul14[state[13]] ^ mul11[state[14]] ^ mul13[state[15]]);
 	tmp[14] = (unsigned char)(mul13[state[12]] ^ mul9[state[13]] ^ mul14[state[14]] ^ mul11[state[15]]);
@@ -423,7 +401,7 @@ void aesDecrypt(unsigned char * plain_text, unsigned char* key, int text_length)
 
 int main() {
 
-	string filename = "C:/Users/AAtri/Downloads/projects/text.txt"; // file path which needed to be encrypt
+	string filename = "C:/*****/text.txt"; // file path which needed to be encrypt
 	ifstream obj(filename.c_str());
 	if (!obj.is_open()) {
 		cout << " Failed to open" << endl;                          // To check if file is able to open or not
